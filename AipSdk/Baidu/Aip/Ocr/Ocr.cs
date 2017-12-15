@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Ocr
 {
@@ -117,10 +118,10 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns>JObject</returns>
-        public JObject GeneralWithLocatin(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> GeneralWithLocatin(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlGeneral);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             if (options != null)
@@ -129,7 +130,7 @@ namespace Baidu.Aip.Ocr
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -195,16 +196,16 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns>JObject</returns>
-        public JObject GeneralWithLocatin(string imageUrl, Dictionary<string, object> options = null)
+        public async Task<JObject> GeneralWithLocatin(string imageUrl, Dictionary<string, object> options = null)
         {
             CheckNotNull(imageUrl, "imageUrl");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlGeneral);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys["url"] = imageUrl;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
 
@@ -271,10 +272,10 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns>JObject</returns>
-        public JObject GeneralBasic(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> GeneralBasic(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlBasicGeneral);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             if (options != null)
@@ -283,7 +284,7 @@ namespace Baidu.Aip.Ocr
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -292,22 +293,22 @@ namespace Baidu.Aip.Ocr
         /// <param name="imageUrl">图片url</param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject GeneralBasic(string imageUrl, Dictionary<string, object> options = null)
+        public async Task<JObject> GeneralBasic(string imageUrl, Dictionary<string, object> options = null)
         {
             CheckNotNull(imageUrl, "imageUrl");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlBasicGeneral);
             aipReq.Bodys["url"] = imageUrl;
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
-        public JObject Accurate(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> Accurate(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlAccurate);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             if (options != null)
@@ -316,13 +317,13 @@ namespace Baidu.Aip.Ocr
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
-        public JObject AccurateWithLocation(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> AccurateWithLocation(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlAccurateWithLoc);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             if (options != null)
@@ -331,7 +332,7 @@ namespace Baidu.Aip.Ocr
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -397,10 +398,10 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns></returns>
-        public JObject WebImage(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> WebImage(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlWebImage);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             if (options != null)
@@ -409,7 +410,7 @@ namespace Baidu.Aip.Ocr
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -475,10 +476,10 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns></returns>
-        public JObject WebImage(string imageUrl, Dictionary<string, object> options = null)
+        public async Task<JObject> WebImage(string imageUrl, Dictionary<string, object> options = null)
         {
             CheckNotNull(imageUrl, "imageUrl");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlWebImage);
 
             if (options != null)
@@ -488,7 +489,7 @@ namespace Baidu.Aip.Ocr
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
             aipReq.Bodys["url"] = imageUrl;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
 
@@ -555,10 +556,10 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns></returns>
-        public JObject GeneralEnhanced(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> GeneralEnhanced(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlEnhancedGeneral);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             if (options != null)
@@ -567,7 +568,7 @@ namespace Baidu.Aip.Ocr
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
 
@@ -634,16 +635,16 @@ namespace Baidu.Aip.Ocr
         ///     </list>
         /// </param>
         /// <returns></returns>
-        public JObject GeneralEnhanced(string imageUrl, Dictionary<string, object> options = null)
+        public async Task<JObject> GeneralEnhanced(string imageUrl, Dictionary<string, object> options = null)
         {
             CheckNotNull(imageUrl, "imageUrl");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlEnhancedGeneral);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys["url"] = imageUrl;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
 
@@ -653,10 +654,10 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options">可选参数</param>
         /// <returns></returns>
-        public JObject IdCardFront(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> IdCardFront(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlIdCard);
             if (options != null)
             {
@@ -666,7 +667,7 @@ namespace Baidu.Aip.Ocr
             }
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             aipReq.Bodys.Add("id_card_side", "front");
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -675,10 +676,10 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject IdCardBack(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> IdCardBack(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlIdCard);
             if (options != null)
             {
@@ -688,7 +689,7 @@ namespace Baidu.Aip.Ocr
             }
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
             aipReq.Bodys.Add("id_card_side", "back");
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -697,10 +698,10 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject BankCard(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> BankCard(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlBankCard);
             if (options != null)
             {
@@ -709,7 +710,7 @@ namespace Baidu.Aip.Ocr
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -718,10 +719,10 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject DrivingLicense(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> DrivingLicense(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlDrivingLicense);
             if (options != null)
             {
@@ -730,7 +731,7 @@ namespace Baidu.Aip.Ocr
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -739,10 +740,10 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject VehicleLicense(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> VehicleLicense(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlVehicleLicense);
             if (options != null)
             {
@@ -751,7 +752,7 @@ namespace Baidu.Aip.Ocr
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             }
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -760,16 +761,16 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject PlateLicense(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> PlateLicense(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlPlateLicense);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -778,16 +779,16 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject Receipt(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> Receipt(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlReceipt);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -796,28 +797,28 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject BusinessLicense(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> BusinessLicense(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlBusinessLicense);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
-        public JObject Template(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> Template(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlBusinessLicense);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys[pair.Key] = pair.Value;
             aipReq.Bodys["image"] = Convert.ToBase64String(image);
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 }

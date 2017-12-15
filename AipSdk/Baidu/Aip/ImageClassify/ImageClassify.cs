@@ -13,9 +13,7 @@
 
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-
-
-
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.ImageClassify
 {
@@ -69,12 +67,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject General(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> General(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(GENERAL);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -82,7 +80,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 菜品识别接口
@@ -96,12 +94,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject DishDetect(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> DishDetect(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(DISH_DETECT);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -109,7 +107,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 食材识别接口
@@ -123,12 +121,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject IngredientDetect(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> IngredientDetect(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(INGREDIENT_DETECT);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -136,7 +134,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 车辆识别接口
@@ -150,12 +148,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject CarDetect(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> CarDetect(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(CAR_DETECT);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -163,7 +161,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// logo商标识别接口
@@ -177,12 +175,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject LogoSearch(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> LogoSearch(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(LOGO_SEARCH);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -190,7 +188,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// logo商标识别—添加接口
@@ -203,14 +201,14 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject LogoAdd(byte[] image, string brief, Dictionary<string, object> options = null)
+        public async Task<JObject> LogoAdd(byte[] image, string brief, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(LOGO_ADD);
             
             CheckNotNull(image, "image");
             aipReq.Bodys["brief"] = brief;
             
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -218,7 +216,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// logo商标识别—删除接口
@@ -231,12 +229,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject LogoDeleteByImage(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> LogoDeleteByImage(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(LOGO_DELETE);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -244,7 +242,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// logo商标识别—删除接口
@@ -257,19 +255,19 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject LogoDeleteBySign(string contSign, Dictionary<string, object> options = null)
+        public async Task<JObject> LogoDeleteBySign(string contSign, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(LOGO_DELETE);
             
             aipReq.Bodys["cont_sign"] = contSign;
             
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys[pair.Key] = pair.Value;
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 动物识别接口
@@ -283,12 +281,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject AnimalDetect(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> AnimalDetect(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(ANIMAL_DETECT);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -296,7 +294,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 植物识别接口
@@ -309,12 +307,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject PlantDetect(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> PlantDetect(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(PLANT_DETECT);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -322,7 +320,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 图像主体检测接口
@@ -336,12 +334,12 @@ namespace Baidu.Aip.ImageClassify
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject ObjectDetect(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> ObjectDetect(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(OBJECT_DETECT);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -349,7 +347,7 @@ namespace Baidu.Aip.ImageClassify
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 

@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Speech
 {
@@ -45,9 +46,9 @@ namespace Baidu.Aip.Speech
         /// <param name="rate"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject Recognize(byte[] data, string format, int rate, Dictionary<string, object> options = null)
+        public async Task<JObject> Recognize(byte[] data, string format, int rate, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             CheckNotNull(data, "data");
             CheckNotNull(format, "format");
             var req = DefaultRequest(UrlAsr);
@@ -65,7 +66,7 @@ namespace Baidu.Aip.Speech
             req.Bodys["len"] = data.Length;
             req.Bodys["speech"] = Convert.ToBase64String(data);
             req.Bodys["token"] = Token;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
@@ -77,10 +78,10 @@ namespace Baidu.Aip.Speech
         /// <param name="rate"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject Recoginze(string url, string callback, string format, int rate,
+        public async Task<JObject> Recoginze(string url, string callback, string format, int rate,
             Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             CheckNotNull(url, "url");
             CheckNotNull(format, "format");
             CheckNotNull(callback, "callback");
@@ -99,7 +100,7 @@ namespace Baidu.Aip.Speech
             if (!req.Bodys.ContainsKey("channel"))
                 req.Bodys["channel"] = 1;
             req.Bodys["token"] = Token;
-            return PostAction(req);
+            return await PostAction(req);
         }
     }
 }

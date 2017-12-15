@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Kg
 {
@@ -21,14 +22,14 @@ namespace Baidu.Aip.Kg
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject GetTasks(Dictionary<string, object> options = null)
+        public async Task<JObject> GetTasks(Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlTaskQuey);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -36,12 +37,12 @@ namespace Baidu.Aip.Kg
         /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
-        public JObject GetTaskInfo(int taskId)
+        public async Task<JObject> GetTaskInfo(int taskId)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlTaskInfo);
             aipReq.Bodys.Add("id", taskId);
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -54,10 +55,10 @@ namespace Baidu.Aip.Kg
         /// <param name="outputFile"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject TaskCreate(string name, string templateContent, string inputMappingFile, string urlPattern,
+        public async Task<JObject> TaskCreate(string name, string templateContent, string inputMappingFile, string urlPattern,
             string outputFile, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlTaskCreate);
             if (options != null)
                 foreach (var pair in options)
@@ -67,7 +68,7 @@ namespace Baidu.Aip.Kg
             aipReq.Bodys["input_mapping_file"] = inputMappingFile;
             aipReq.Bodys["url_pattern"] = urlPattern;
             aipReq.Bodys["output_file"] = outputFile;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -76,15 +77,15 @@ namespace Baidu.Aip.Kg
         /// <param name="id"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject UpdateTask(int id, Dictionary<string, object> options = null)
+        public async Task<JObject> UpdateTask(int id, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlTaskUpdate);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys["id"] = id;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -92,12 +93,12 @@ namespace Baidu.Aip.Kg
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public JObject StartTask(int id)
+        public async Task<JObject> StartTask(int id)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlTaskStart);
             aipReq.Bodys["id"] = id;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -105,12 +106,12 @@ namespace Baidu.Aip.Kg
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public JObject GetTaskStatus(int id)
+        public async Task<JObject> GetTaskStatus(int id)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlTaskStatus);
             aipReq.Bodys["id"] = id;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 }

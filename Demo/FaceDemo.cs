@@ -1,21 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Demo
 {
     internal class FaceDemo
     {
-        public static void FaceMatch()
+        public async static Task<JObject> FaceMatch()
         {
             var client = new Face.Face("Api Key", "Secret Key");
-            var image1 = File.ReadAllBytes("图片文件路径");
-            var image2 = File.ReadAllBytes("图片文件路径");
-            var image3 = File.ReadAllBytes("图片文件路径");
+            var image1 = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory,"images\\1.jpg"));
+            var image2 = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "images\\2.jpg"));
+            var image3 = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "images\\3.jpg"));
 
             var images = new[] {image1, image2, image3};
 
             // 人脸对比
-            var result = client.FaceMatch(images);
+            var result = await client.FaceMatch(images);
+
+            return result;
         }
 
         public static void FaceDetect()
@@ -29,12 +34,14 @@ namespace Baidu.Aip.Demo
             var result = client.FaceDetect(image, options);
         }
 
-        public static void FaceRegister()
+        public async static Task<JObject> FaceRegister()
         {
             var client = new Face.Face("Api Key", "Secret Key");
-            var image1 = File.ReadAllBytes("图片文件路径");
+            var image1 = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "images\\1.jpg"));
 
-            var result = client.User.Register(image1, "uid", "user info here", new[] {"groupId"});
+            var result = await client.User.Register(image1, "TEST", "TEST", new[] { "YAOKONGJIAN_USER" });
+
+            return result;
         }
 
         public static void FaceUpdate()
@@ -52,20 +59,24 @@ namespace Baidu.Aip.Demo
             result = client.User.Delete("uid", new[] {"group1"});
         }
 
-        public static void FaceVerify()
+        public async static Task<JObject> FaceVerify()
         {
             var client = new Face.Face("Api Key", "Secret Key");
-            var image1 = File.ReadAllBytes("图片文件路径");
+            var image1 = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "images\\1.jpg"));
 
-            var result = client.User.Verify(image1, "uid", new[] {"groupId"}, 1);
+            var result = await client.User.Verify(image1, "TEST", new[] { "YAOKONGJIAN_USER" }, 1);
+
+            return result;
         }
 
-        public static void FaceIdentify()
+        public async static Task<JObject> FaceIdentify()
         {
             var client = new Face.Face("Api Key", "Secret Key");
-            var image1 = File.ReadAllBytes("图片文件路径");
+            var image1 = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "images\\1.jpg"));
 
-            var result = client.User.Identify(image1, new[] {"groupId"}, 1, 1);
+            var result = await client.User.Identify(image1, new[] { "YAOKONGJIAN_USER" }, 1, 1);
+
+            return result;
         }
 
         public static void UserInfo()

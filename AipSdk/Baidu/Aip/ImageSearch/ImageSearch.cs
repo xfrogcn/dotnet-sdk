@@ -13,9 +13,7 @@
 
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-
-
-
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.ImageSearch
 {
@@ -67,12 +65,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SameHqAdd(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> SameHqAdd(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SAME_HQ_ADD);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -80,7 +78,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相同图检索—检索接口
@@ -93,12 +91,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SameHqSearch(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> SameHqSearch(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SAME_HQ_SEARCH);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -106,7 +104,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相同图检索—删除接口
@@ -119,12 +117,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SameHqDeleteByImage(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> SameHqDeleteByImage(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SAME_HQ_DELETE);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -132,7 +130,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相同图检索—删除接口
@@ -145,19 +143,19 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SameHqDeleteBySign(string contSign, Dictionary<string, object> options = null)
+        public async Task<JObject> SameHqDeleteBySign(string contSign, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SAME_HQ_DELETE);
             
             aipReq.Bodys["cont_sign"] = contSign;
             
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys[pair.Key] = pair.Value;
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相似图检索—入库接口
@@ -171,12 +169,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SimilarAdd(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> SimilarAdd(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SIMILAR_ADD);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -184,7 +182,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相似图检索—检索接口
@@ -197,12 +195,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SimilarSearch(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> SimilarSearch(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SIMILAR_SEARCH);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -210,7 +208,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相似图检索—删除接口
@@ -223,12 +221,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SimilarDeleteByImage(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> SimilarDeleteByImage(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SIMILAR_DELETE);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -236,7 +234,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 相似图检索—删除接口
@@ -249,19 +247,19 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject SimilarDeleteBySign(string contSign, Dictionary<string, object> options = null)
+        public async Task<JObject> SimilarDeleteBySign(string contSign, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(SIMILAR_DELETE);
             
             aipReq.Bodys["cont_sign"] = contSign;
             
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys[pair.Key] = pair.Value;
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 商品检索—入库接口
@@ -277,12 +275,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject ProductAdd(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> ProductAdd(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(PRODUCT_ADD);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -290,7 +288,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 商品检索—检索接口
@@ -306,12 +304,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject ProductSearch(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> ProductSearch(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(PRODUCT_SEARCH);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -319,7 +317,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 商品检索—删除接口
@@ -332,12 +330,12 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject ProductDeleteByImage(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> ProductDeleteByImage(byte[] image, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(PRODUCT_DELETE);
             
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
@@ -345,7 +343,7 @@ namespace Baidu.Aip.ImageSearch
             
             aipReq.Bodys["image"] = System.Convert.ToBase64String(image);
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
         /// <summary>
         /// 商品检索—删除接口
@@ -358,19 +356,19 @@ namespace Baidu.Aip.ImageSearch
         /// </param>
         /// <return>JObject</return>
         ///
-        public JObject ProductDeleteBySign(string contSign, Dictionary<string, object> options = null)
+        public async Task<JObject> ProductDeleteBySign(string contSign, Dictionary<string, object> options = null)
         {
             var aipReq = DefaultRequest(PRODUCT_DELETE);
             
             aipReq.Bodys["cont_sign"] = contSign;
             
-            PreAction();
+            await PreAction();
 
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys[pair.Key] = pair.Value;
             
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 

@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.ImageCensor
 {
@@ -39,7 +40,7 @@ namespace Baidu.Aip.ImageCensor
             };
         }
 
-        private JObject ComboPostAction(AipHttpRequest aipReq, string[] scenes, Dictionary<string, object> options)
+        private async Task<JObject> ComboPostAction(AipHttpRequest aipReq, string[] scenes, Dictionary<string, object> options)
         {
             aipReq.Bodys.Add("scenes", scenes);
 
@@ -55,7 +56,7 @@ namespace Baidu.Aip.ImageCensor
                         conf.Add(pair.Key, JsonConvert.SerializeObject(pair.Value));
                 aipReq.Bodys.Add("scenesConf", conf);
             }
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
 
@@ -69,13 +70,13 @@ namespace Baidu.Aip.ImageCensor
         ///     key为服务类型，value为json string或dictionary
         /// </param>
         /// <returns></returns>
-        public JObject Combo(string imageUrl, string[] scenes, Dictionary<string, object> options = null)
+        public async Task<JObject> Combo(string imageUrl, string[] scenes, Dictionary<string, object> options = null)
         {
             CheckNotNull(imageUrl, "imageUrl");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(ComboUrl);
             aipReq.Bodys.Add("imgUrl", imageUrl);
-            return ComboPostAction(aipReq, scenes, options);
+            return await ComboPostAction(aipReq, scenes, options);
         }
 
         /// <summary>
@@ -85,13 +86,13 @@ namespace Baidu.Aip.ImageCensor
         /// <param name="scenes">调用的服务列表</param>
         /// <param name="options">额外参数</param>
         /// <returns></returns>
-        public JObject Combo(byte[] image, string[] scenes, Dictionary<string, object> options = null)
+        public async Task<JObject> Combo(byte[] image, string[] scenes, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(ComboUrl);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return ComboPostAction(aipReq, scenes, options);
+            return await ComboPostAction(aipReq, scenes, options);
         }
 
         /// <summary>
@@ -100,10 +101,10 @@ namespace Baidu.Aip.ImageCensor
         /// <param name="images"></param>
         /// <param name="configId"></param>
         /// <returns></returns>
-        public JObject FaceAudit(byte[][] images, long? configId = null)
+        public async Task<JObject> FaceAudit(byte[][] images, long? configId = null)
         {
             CheckNotNull(images, "images");
-            PreAction();
+            await PreAction();
             var aipReq = new AipHttpRequest(FaceAuditUri)
             {
                 Method = "POST",
@@ -112,7 +113,7 @@ namespace Baidu.Aip.ImageCensor
             if (configId.HasValue)
                 aipReq.Bodys.Add("configId", configId);
             aipReq.Bodys.Add("images", ImagesToParams(images));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -121,10 +122,10 @@ namespace Baidu.Aip.ImageCensor
         /// <param name="images"></param>
         /// <param name="configId"></param>
         /// <returns></returns>
-        public JObject FaceAudit(string[] images, long? configId = null)
+        public async Task<JObject> FaceAudit(string[] images, long? configId = null)
         {
             CheckNotNull(images, "images");
-            PreAction();
+            await PreAction();
             var aipReq = new AipHttpRequest(FaceAuditUri)
             {
                 Method = "POST",
@@ -133,7 +134,7 @@ namespace Baidu.Aip.ImageCensor
             if (configId.HasValue)
                 aipReq.Bodys.Add("configId", configId);
             aipReq.Bodys.Add("imgUrls", StrJoin(images));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 }

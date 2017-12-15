@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Face
 {
@@ -33,13 +34,13 @@ namespace Baidu.Aip.Face
         /// <param name="groupIds"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-        public JObject Register(byte[] image, string uid, string userInfo, IEnumerable<string> groupIds,
+        public async Task<JObject> Register(byte[] image, string uid, string userInfo, IEnumerable<string> groupIds,
             string actionType = null)
         {
             CheckNotNull(image, "image");
             CheckNotNull(uid, "uid");
             CheckNotNull(groupIds, "groupIds");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_USER_ADD_URL);
             var imageData = Convert.ToBase64String(image);
             req.Bodys.Add("image", imageData);
@@ -50,7 +51,7 @@ namespace Baidu.Aip.Face
             if (userInfo == null)
                 userInfo = "";
             req.Bodys.Add("user_info", userInfo);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 
@@ -59,13 +60,13 @@ namespace Baidu.Aip.Face
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
-        public JObject GetInfo(string uid)
+        public async Task<JObject> GetInfo(string uid)
         {
             CheckNotNull(uid, "uid");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_USER_GET_URL);
             req.Bodys.Add("uid", uid);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 
@@ -78,13 +79,13 @@ namespace Baidu.Aip.Face
         /// <param name="userInfo"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-        public JObject Update(byte[] image, string uid, string groupId, string userInfo, string actionType = null)
+        public async Task<JObject> Update(byte[] image, string uid, string groupId, string userInfo, string actionType = null)
         {
             CheckNotNull(image, "image");
             CheckNotNull(uid, "uid");
             CheckNotNull(groupId, "groupId");
             CheckNotNull(userInfo, "userInfo");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_USER_UPDATE_URL);
 
             var imageData = Convert.ToBase64String(image);
@@ -94,7 +95,7 @@ namespace Baidu.Aip.Face
             req.Bodys.Add("user_info", userInfo);
             if (!string.IsNullOrEmpty(actionType))
                 req.Bodys.Add("action_type", actionType);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
@@ -102,13 +103,13 @@ namespace Baidu.Aip.Face
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
-        public JObject Delete(string uid)
+        public async Task<JObject> Delete(string uid)
         {
             CheckNotNull(uid, "uid");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_USER_DELETE_URL);
             req.Bodys.Add("uid", uid);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
@@ -117,15 +118,15 @@ namespace Baidu.Aip.Face
         /// <param name="uid"></param>
         /// <param name="groupIds"></param>
         /// <returns></returns>
-        public JObject Delete(string uid, IEnumerable<string> groupIds)
+        public async Task<JObject> Delete(string uid, IEnumerable<string> groupIds)
         {
             CheckNotNull(uid, "uid");
             CheckNotNull(groupIds, "groupIds");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_USER_DELETE_URL);
             req.Bodys.Add("uid", uid);
             req.Bodys.Add("group_id", StrJoin(groupIds));
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
@@ -137,13 +138,13 @@ namespace Baidu.Aip.Face
         /// <param name="topNum"></param>
         /// <param name="extFileds"></param>
         /// <returns></returns>
-        public JObject Verify(byte[] image, string uid, IEnumerable<string> groupIds, int topNum = 1,
+        public async Task<JObject> Verify(byte[] image, string uid, IEnumerable<string> groupIds, int topNum = 1,
             IEnumerable<string> extFileds = null)
         {
             CheckNotNull(image, "image");
             CheckNotNull(uid, "uid");
             CheckNotNull(groupIds, "groupIds");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_VERIFY_URL);
             var imageData = Convert.ToBase64String(image);
             req.Bodys.Add("image", imageData);
@@ -153,7 +154,7 @@ namespace Baidu.Aip.Face
             if (extFileds != null)
                 req.Bodys.Add("ext_fields", StrJoin(extFileds));
 
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
@@ -165,12 +166,12 @@ namespace Baidu.Aip.Face
         /// <param name="faceTopNum"></param>
         /// <param name="extFileds"></param>
         /// <returns></returns>
-        public JObject Identify(byte[] image, IEnumerable<string> groupIds, int userTopNum = 1, int faceTopNum = 1,
+        public async  Task<JObject> Identify(byte[] image, IEnumerable<string> groupIds, int userTopNum = 1, int faceTopNum = 1,
             IEnumerable<string> extFileds = null)
         {
             CheckNotNull(image, "image");
             CheckNotNull(groupIds, "groupIds");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_IDENTIFY_URL);
             var imageData = Convert.ToBase64String(image);
             req.Bodys.Add("images", imageData);
@@ -179,7 +180,7 @@ namespace Baidu.Aip.Face
             req.Bodys.Add("fcae_top_num", faceTopNum);
             if (extFileds != null)
                 req.Bodys.Add("ext_fields", StrJoin(extFileds));
-            return PostAction(req);
+            return await PostAction(req);
         }
     }
 }

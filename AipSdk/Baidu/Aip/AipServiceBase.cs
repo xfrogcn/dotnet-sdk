@@ -17,6 +17,9 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Net.Http;
 
 namespace Baidu.Aip
 {
@@ -24,9 +27,10 @@ namespace Baidu.Aip
 
     public abstract class AipServiceBase
     {
-        protected readonly object AuthLock = new object();
+        protected readonly SemaphoreSlim AuthLock = new SemaphoreSlim(1,1);
         protected volatile bool HasDoneAuthoried; // 是否已经走过鉴权流程
         protected volatile bool IsDev;
+        private static HttpClient apiClient = new HttpClient();
 
         protected AipServiceBase(string apiKey, string secretKey)
         {
@@ -44,27 +48,35 @@ namespace Baidu.Aip
         public bool DebugLog { get; set; }
 
 
-        protected virtual void DoAuthorization()
+        protected async virtual Task DoAuthorization()
         {
-            lock (AuthLock)
-            {
-                if (!NeetAuth())
-                    return;
 
-                var resp = Auth.OpenApiFetchToken(ApiKey, SecretKey);
+            if (!NeetAuth())
+                return;
+
+            await AuthLock.WaitAsync();
+            try
+            {
+                var resp = await Auth.OpenApiFetchToken(ApiKey, SecretKey);
 
                 if (resp != null)
                 {
-                    ExpireAt = DateTime.Now.AddSeconds((int) resp["expires_in"] - 1);
+                    ExpireAt = DateTime.Now.AddSeconds((int)resp["expires_in"] - 1);
                     var scopes = resp["scope"].ToString().Split(' ');
                     if (scopes.ToList().Exists(v => Consts.AipScopes.Contains(v)))
                     {
                         IsDev = true;
-                        Token = (string) resp["access_token"];
+                        Token = (string)resp["access_token"];
                     }
                 }
                 HasDoneAuthoried = true;
             }
+            finally
+            {
+                AuthLock.Release();
+            }
+
+
         }
 
         protected virtual bool NeetAuth()
@@ -78,14 +90,14 @@ namespace Baidu.Aip
         }
 
 
-        protected void PreAction()
+        protected async Task PreAction()
         {
-            DoAuthorization();
+           await  DoAuthorization();
         }
 
-        protected virtual JObject PostAction(AipHttpRequest aipReq)
+        protected async virtual Task<JObject> PostAction(AipHttpRequest aipReq)
         {
-            var respStr = SendRequet(aipReq);
+            var respStr = await SendRequet(aipReq);
 //		    Console.WriteLine(respStr);
             JObject respObj;
             try
@@ -110,31 +122,33 @@ namespace Baidu.Aip
             return respObj;
         }
 
-        protected virtual HttpWebRequest GenerateWebRequest(AipHttpRequest aipRequest)
+        protected virtual HttpRequestMessage GenerateWebRequest(AipHttpRequest aipRequest)
         {
             return IsDev
                 ? aipRequest.GenerateDevWebRequest(Token)
                 : aipRequest.GenerateCloudRequest(ApiKey, SecretKey);
         }
 
-        protected string SendRequet(AipHttpRequest aipRequest)
+        protected async Task<string> SendRequet(AipHttpRequest aipRequest)
         {
-            return Utils.StreamToString(SendRequetRaw(aipRequest).GetResponseStream(), aipRequest.ContentEncoding);
+            HttpResponseMessage resp = await SendRequetRaw(aipRequest);
+            return await  resp.Content.ReadAsStringAsync();
+          //  return Utils.StreamToString(SendRequetRaw(aipRequest).GetResponseStream(), aipRequest.ContentEncoding);
         }
 
-        protected HttpWebResponse SendRequetRaw(AipHttpRequest aipRequest)
+        protected async Task<HttpResponseMessage> SendRequetRaw(AipHttpRequest aipRequest)
         {
             var webReq = GenerateWebRequest(aipRequest);
             Log(webReq.RequestUri.ToString());
-            HttpWebResponse resp;
+            HttpResponseMessage resp;
             try
             {
-                resp = (HttpWebResponse) webReq.GetResponse();
+                resp = await apiClient.SendAsync(webReq);
             }
-            catch (WebException e)
+            catch (HttpRequestException e)
             {
                 // 网络请求失败应该抛异常
-                throw new AipException((int) e.Status, e.Message);
+                throw new AipException((int) 100, e.Message);
             }
 
             if (resp.StatusCode != HttpStatusCode.OK)

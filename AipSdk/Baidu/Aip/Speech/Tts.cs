@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Speech
 {
@@ -66,9 +67,9 @@ namespace Baidu.Aip.Speech
         /// <param name="text">需要合成的内容</param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public TtsResponse Synthesis(string text, Dictionary<string, object> options = null)
+        public async Task<TtsResponse> Synthesis(string text, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             CheckNotNull(text, "text");
             var req = DefaultRequest(UrlTts);
 
@@ -87,17 +88,18 @@ namespace Baidu.Aip.Speech
 
             req.Bodys["tok"] = Token;
             req.Bodys["tex"] = text;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
-        protected new TtsResponse PostAction(AipHttpRequest aipReq)
+        protected async new Task<TtsResponse> PostAction(AipHttpRequest aipReq)
         {
             var ret = new TtsResponse();
-            var response = SendRequetRaw(aipReq);
-
-            if (response.ContentType.ToLower() == "application/json")
+            var response = await SendRequetRaw(aipReq);
+            
+            if (response.Content.Headers.ContentType.MediaType.ToLower() == "application/json")
             {
-                var respStr = Utils.StreamToString(response.GetResponseStream(), Encoding.UTF8);
+                //var respStr = Utils.StreamToString(response.GetResponseStream(), Encoding.UTF8);
+                var respStr = await response.Content.ReadAsStringAsync();
                 // 失败
                 try
                 {
@@ -120,7 +122,7 @@ namespace Baidu.Aip.Speech
             else
             {
                 ret.ErrorCode = 0;
-                ret.Data = Utils.StreamToBytes(response.GetResponseStream());
+                ret.Data = await response.Content.ReadAsByteArrayAsync();  //Utils.StreamToBytes(response.GetResponseStream());
             }
             return ret;
         }

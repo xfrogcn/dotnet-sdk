@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Face
 {
@@ -34,10 +35,10 @@ namespace Baidu.Aip.Face
         /// <param name="image">图片二进制数组</param>
         /// <param name="options">可选参数</param>
         /// <returns>检测结果</returns>
-        public JObject FaceDetect(byte[] image, Dictionary<string, object> options = null)
+        public async  Task<JObject> FaceDetect(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_DETECT_URL);
             req.Bodys.Add("image", Convert.ToBase64String(image));
 
@@ -47,16 +48,16 @@ namespace Baidu.Aip.Face
                 foreach (var pair in options)
                     req.Bodys.Add(pair.Key, pair.Value);
             }
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
         ///     人脸对比
         /// </summary>
-        public JObject FaceMatch(IEnumerable<byte[]> images, Dictionary<string, string> options = null)
+        public async Task<JObject> FaceMatch(IEnumerable<byte[]> images, Dictionary<string, string> options = null)
         {
             CheckNotNull(images, "images");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_MATCH_URL);
 
             req.Bodys.Add("images", ImagesToParams(images));
@@ -67,7 +68,7 @@ namespace Baidu.Aip.Face
                     req.Bodys.Add(pair.Key, pair.Value);
             }
 
-            return PostAction(req);
+            return await PostAction(req);
         }
     }
 }

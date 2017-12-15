@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Ocr
 {
@@ -47,16 +48,16 @@ namespace Baidu.Aip.Ocr
         /// <param name="image"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject BeginRecognition(byte[] image, Dictionary<string, object> options = null)
+        public async Task<JObject> BeginRecognition(byte[] image, Dictionary<string, object> options = null)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlFormRequest);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys["image"] = Convert.ToBase64String(image);
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -65,15 +66,15 @@ namespace Baidu.Aip.Ocr
         /// <param name="requestId"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public JObject GetRecognitionResult(string requestId, Dictionary<string, object> options = null)
+        public async Task<JObject> GetRecognitionResult(string requestId, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(UrlFormResult);
             if (options != null)
                 foreach (var pair in options)
                     aipReq.Bodys.Add(pair.Key, pair.Value);
             aipReq.Bodys["request_id"] = requestId;
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         #endregion
@@ -89,7 +90,7 @@ namespace Baidu.Aip.Ocr
         /// <param name="resultOptions">轮询结果时的可选参数</param>
         /// <returns></returns>
         /// <exception cref="AipException"></exception>
-        public JObject Recognize(
+        public async Task<JObject> Recognize(
             byte[] image,
             long timeoutMiliseconds = 10000,
             Dictionary<string, object> beginOptions = null,
@@ -97,7 +98,7 @@ namespace Baidu.Aip.Ocr
         )
         {
             var watch = Stopwatch.StartNew();
-            var formBeginResp = BeginRecognition(image, beginOptions);
+            var formBeginResp = await BeginRecognition(image, beginOptions);
             if (!(formBeginResp["result"] is JArray) || ((JArray) formBeginResp["result"]).Count != 1)
                 return formBeginResp;
             var requestId = formBeginResp["result"][0]["request_id"].ToString();
@@ -109,7 +110,7 @@ namespace Baidu.Aip.Ocr
                     Log("Timeout!");
                     throw new AipException("SDK Error: Timeout for form recognition");
                 }
-                var tempResp = GetRecognitionResult(requestId, resultOptions);
+                var tempResp = await GetRecognitionResult(requestId, resultOptions);
                 JToken tp;
                 if (tempResp.TryGetValue("error_code", out tp))
                 {
@@ -135,7 +136,7 @@ namespace Baidu.Aip.Ocr
         /// <param name="beginOptions"></param>
         /// <param name="resultOptions"></param>
         /// <returns></returns>
-        public JObject RecognizeToJson(
+        public async Task<JObject> RecognizeToJson(
             byte[] image,
             long timeoutMiliseconds = 10000,
             Dictionary<string, object> beginOptions = null,
@@ -144,7 +145,7 @@ namespace Baidu.Aip.Ocr
             if (resultOptions == null)
                 resultOptions = new Dictionary<string, object>();
             resultOptions["result_type"] = "json";
-            return Recognize(image, timeoutMiliseconds, beginOptions, resultOptions);
+            return await Recognize(image, timeoutMiliseconds, beginOptions, resultOptions);
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace Baidu.Aip.Ocr
         /// <param name="beginOptions"></param>
         /// <param name="resultOptions"></param>
         /// <returns></returns>
-        public JObject RecognizeToExcel(
+        public async Task<JObject> RecognizeToExcel(
             byte[] image,
             long timeoutMiliseconds = 10000,
             Dictionary<string, object> beginOptions = null,
@@ -164,7 +165,7 @@ namespace Baidu.Aip.Ocr
             if (resultOptions == null)
                 resultOptions = new Dictionary<string, object>();
             resultOptions["result_type"] = "excel";
-            return Recognize(image, timeoutMiliseconds, beginOptions, resultOptions);
+            return await Recognize(image, timeoutMiliseconds, beginOptions, resultOptions);
         }
 
 //        
@@ -175,7 +176,7 @@ namespace Baidu.Aip.Ocr
 //        /// <param name="outputFile"></param>
 //        /// <param name="timeoutMiliseconds">超时时间</param>
 //        /// <returns></returns>
-//        public JObject RecognizeToExcel(byte[] image, out string outputFile, long timeoutMiliseconds)
+//        public async Task<JObject> RecognizeToExcel(byte[] image, out string outputFile, long timeoutMiliseconds)
 //        {
 //            
 //        }

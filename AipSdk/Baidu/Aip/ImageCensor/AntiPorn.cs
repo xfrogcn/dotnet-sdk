@@ -13,6 +13,7 @@
 
 using System;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.ImageCensor
 {
@@ -33,13 +34,13 @@ namespace Baidu.Aip.ImageCensor
         /// </summary>
         /// <param name="image">图像字节数组</param>
         /// <returns>识别结果</returns>
-        public JObject Detect(byte[] image)
+        public async Task<JObject> Detect(byte[] image)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(ANTI_PORN_URL);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
 
         /// <summary>
@@ -47,13 +48,13 @@ namespace Baidu.Aip.ImageCensor
         /// </summary>
         /// <param name="image">图像字节数组</param>
         /// <returns>识别结果</returns>
-        public JObject DetectGif(byte[] image)
+        public async Task<JObject> DetectGif(byte[] image)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(ANTI_PORN_GIF_URL);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 }

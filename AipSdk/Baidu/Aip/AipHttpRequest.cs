@@ -17,6 +17,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace Baidu.Aip
 {
@@ -63,7 +64,7 @@ namespace Baidu.Aip
             Uri = new Uri(uri);
         }
 
-        public HttpWebRequest GeneratedRequest { get; private set; }
+        public HttpRequestMessage GeneratedRequest { get; private set; }
 
 
         public string UriWithQuery
@@ -75,10 +76,10 @@ namespace Baidu.Aip
             }
         }
 
-        public byte[] ProcessHttpRequest(HttpWebRequest webRequest)
+        public void ProcessHttpRequest(HttpRequestMessage webRequest)
         {
-            webRequest.Method = Method;
-            webRequest.ReadWriteTimeout = 30000;
+            webRequest.Method = new HttpMethod( Method);
+          //  webRequest.ReadWriteTimeout = 30000;
             foreach (var header in Headers)
                 webRequest.Headers.Add(header.Key, header.Value);
             GeneratedRequest = webRequest;
@@ -89,17 +90,19 @@ namespace Baidu.Aip
                     var body = Bodys.Select(pair => pair.Key + "=" + Utils.UriEncode(pair.Value.ToString()))
                         .DefaultIfEmpty("")
                         .Aggregate((a, b) => a + "&" + b);
-                    webRequest.ContentType = "application/x-www-form-urlencoded";
-                    return ContentEncoding.GetBytes(body);
+                        // webRequest.ContentType = "application/x-www-form-urlencoded";
+                        webRequest.Content = new StringContent(body, ContentEncoding, "application/x-www-form-urlencoded");
+                        break;
                 }
                 case BodyFormat.Json:
                 {
                     var body = JsonConvert.SerializeObject(Bodys);
-                    webRequest.ContentType = "application/json";
-                    return ContentEncoding.GetBytes(body);
+                   
+                        webRequest.Content = new StringContent(body, ContentEncoding, "application/json");
+                        break;
                 }
             }
-            return null;
+           
         }
 
         /// <summary>
@@ -107,15 +110,18 @@ namespace Baidu.Aip
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public HttpWebRequest GenerateDevWebRequest(string token)
+        public HttpRequestMessage GenerateDevWebRequest(string token)
         {
             Querys.Add("access_token", token);
-            var ret = (HttpWebRequest) WebRequest.Create(UriWithQuery);
-            ret.ReadWriteTimeout = 30000;
-            ret.Timeout = 30000;
-            var body = ProcessHttpRequest(ret);
-            ret.GetRequestStream().Write(body, 0, body.Length);
-            ret.GetRequestStream().Close();
+            var ret = new HttpRequestMessage();
+            ret.RequestUri = new Uri(UriWithQuery);
+            ProcessHttpRequest(ret);
+            //var ret = (HttpWebRequest) WebRequest.Create(UriWithQuery);
+            //ret.ReadWriteTimeout = 30000;
+            //ret.Timeout = 30000;
+            //var body = ProcessHttpRequest(ret);
+            //ret.GetRequestStream().Write(body, 0, body.Length);
+            //ret.GetRequestStream().Close();
             return ret;
         }
 
@@ -125,15 +131,20 @@ namespace Baidu.Aip
         /// <param name="ak"></param>
         /// <param name="sk"></param>
         /// <returns></returns>
-        public HttpWebRequest GenerateCloudRequest(string ak, string sk)
+        public HttpRequestMessage GenerateCloudRequest(string ak, string sk)
         {
-            var ret = (HttpWebRequest) WebRequest.Create(UriWithQuery);
-            ret.ReadWriteTimeout = 30000;
-            ret.Timeout = 30000;
-            var body = ProcessHttpRequest(ret);
+            var ret = new HttpRequestMessage();
+            ret.RequestUri = new Uri(UriWithQuery);
+            ProcessHttpRequest(ret);
             Auth.CloudRequest(this, ak, sk);
-            ret.GetRequestStream().Write(body, 0, body.Length);
-            ret.GetRequestStream().Close();
+
+            //var ret = (HttpWebRequest) WebRequest.Create(UriWithQuery);
+            //ret.ReadWriteTimeout = 30000;
+            //ret.Timeout = 30000;
+            //var body = ProcessHttpRequest(ret);
+            //Auth.CloudRequest(this, ak, sk);
+            //ret.GetRequestStream().Write(body, 0, body.Length);
+            //ret.GetRequestStream().Close();
             return ret;
         }
 
@@ -141,14 +152,18 @@ namespace Baidu.Aip
         ///     生成语音的Web请求
         /// </summary>
         /// <returns></returns>
-        public HttpWebRequest GenerateSpeechRequest()
+        public HttpRequestMessage GenerateSpeechRequest()
         {
-            var ret = (HttpWebRequest) WebRequest.Create(Uri);
-            ret.ReadWriteTimeout = 30000;
-            ret.Timeout = 30000;
-            var body = ProcessHttpRequest(ret);
-            ret.GetRequestStream().Write(body, 0, body.Length);
-            ret.GetRequestStream().Close();
+            var ret = new HttpRequestMessage();
+            ret.RequestUri = Uri;
+            ProcessHttpRequest(ret);
+
+            //var ret = (HttpWebRequest) WebRequest.Create(Uri);
+            //ret.ReadWriteTimeout = 30000;
+            //ret.Timeout = 30000;
+            //var body = ProcessHttpRequest(ret);
+            //ret.GetRequestStream().Write(body, 0, body.Length);
+            //ret.GetRequestStream().Close();
             return ret;
         }
     }

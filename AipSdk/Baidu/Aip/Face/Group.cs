@@ -13,6 +13,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Face
 {
@@ -26,56 +27,56 @@ namespace Baidu.Aip.Face
         /// <summary>
         ///     组内用户列表查询
         /// </summary>
-        public JObject GetUsers(string groupId, int start = 0, int end = 100)
+        public async Task<JObject> GetUsers(string groupId, int start = 0, int end = 100)
         {
             CheckNotNull(groupId, "groupId");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_GROUP_GET_USERS_URL);
             req.Bodys.Add("group_id", groupId);
             req.Bodys.Add("start", start);
             req.Bodys.Add("end", end);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
         ///     该请求用于查询所有的组的列表
         /// </summary>
-        public JObject GetAllGroups(int start = 0, int end = 100)
+        public async Task<JObject> GetAllGroups(int start = 0, int end = 100)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_GROUP_GET_LIST_URL);
             req.Bodys.Add("start", start);
             req.Bodys.Add("end", end);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
         ///     该请求用于将已经存在于人脸库中的用户添加到一个新的组。
         /// </summary>
-        public JObject AddUser(IEnumerable<string> groupIds, string uid, string srcGroupId)
+        public async Task<JObject> AddUser(IEnumerable<string> groupIds, string uid, string srcGroupId)
         {
             CheckNotNull(groupIds, "groupIds");
             CheckNotNull(uid, "uid");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_GROUP_ADD_USER_URL);
             req.Bodys.Add("group_id", StrJoin(groupIds));
             req.Bodys.Add("uid", uid);
             req.Bodys.Add("src_group_id", srcGroupId);
-            return PostAction(req);
+            return await PostAction(req);
         }
 
         /// <summary>
         ///     该请求用于将用户从某个组中删除，但不会删除用户在其它组的信息。当用户仅属于单个分组时，本接口将返回错误。
         /// </summary>
-        public JObject DeleteUser(IEnumerable<string> groupIds, string uid)
+        public async Task<JObject> DeleteUser(IEnumerable<string> groupIds, string uid)
         {
             CheckNotNull(groupIds, "groupIds");
             CheckNotNull(uid, "uid");
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(FACE_SEARCH_FACESET_GROUP_DELETE_USER_URL);
             req.Bodys.Add("group_id", StrJoin(groupIds));
             req.Bodys.Add("uid", uid);
-            return PostAction(req);
+            return await PostAction(req);
         }
     }
 }

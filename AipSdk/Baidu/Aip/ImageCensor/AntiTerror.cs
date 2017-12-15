@@ -13,6 +13,7 @@
 
 using System;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.ImageCensor
 {
@@ -32,13 +33,13 @@ namespace Baidu.Aip.ImageCensor
         /// </summary>
         /// <param name="image">图像字节数组</param>
         /// <returns></returns>
-        public JObject Detect(byte[] image)
+        public async Task<JObject> Detect(byte[] image)
         {
             CheckNotNull(image, "image");
-            PreAction();
+            await PreAction();
             var aipReq = DefaultRequest(ANTI_TERROR);
             aipReq.Bodys.Add("image", Convert.ToBase64String(image));
-            return PostAction(aipReq);
+            return await PostAction(aipReq);
         }
     }
 }

@@ -13,6 +13,8 @@
 
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Speech
 {
@@ -29,24 +31,30 @@ namespace Baidu.Aip.Speech
         }
 
 
-        protected override void DoAuthorization()
+        protected async override Task DoAuthorization()
         {
-            lock (AuthLock)
+            if (!NeetAuth())
+                return;
+
+            await AuthLock.WaitAsync();
+            try
             {
-                if (!NeetAuth())
-                    return;
+                var resp = await Auth.OpenApiFetchToken(ApiKey, SecretKey, true);
 
-                var resp = Auth.OpenApiFetchToken(ApiKey, SecretKey, true);
-
-                ExpireAt = DateTime.Now.AddSeconds((int) resp["expires_in"] - 1);
+                ExpireAt = DateTime.Now.AddSeconds((int)resp["expires_in"] - 1);
                 IsDev = true;
-                Token = (string) resp["access_token"];
+                Token = (string)resp["access_token"];
                 HasDoneAuthoried = true;
+            }
+            finally
+            {
+                AuthLock.Release();
             }
         }
 
 
-        protected override HttpWebRequest GenerateWebRequest(AipHttpRequest aipRequest)
+
+        protected override HttpRequestMessage GenerateWebRequest(AipHttpRequest aipRequest)
         {
             return aipRequest.GenerateSpeechRequest();
         }

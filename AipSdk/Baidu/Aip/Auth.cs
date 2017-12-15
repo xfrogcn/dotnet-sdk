@@ -19,12 +19,21 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip
 {
     public class Auth
     {
         private const string OAUTH_URL = "https://aip.baidubce.com/oauth/2.0/token";
+
+        private static HttpClient apiClient = null;
+
+        static Auth()
+        {
+            apiClient = new HttpClient();
+        }
 
         private Auth()
         {
@@ -38,7 +47,7 @@ namespace Baidu.Aip
         /// <param name="throws">是否是否throw</param>
         /// <param name="debugLog"></param>
         /// <returns>成功返回token, 失败返回null</returns>
-        public static JObject OpenApiFetchToken(string ak, string sk, bool throws = false, bool debugLog = false)
+        public async static Task<JObject> OpenApiFetchToken(string ak, string sk, bool throws = false, bool debugLog = false)
         {
             var querys = new Dictionary<string, string>
             {
@@ -49,13 +58,18 @@ namespace Baidu.Aip
             var url = string.Format("{0}?{1}", OAUTH_URL, Utils.ParseQueryString(querys));
             if (debugLog)
                 Console.WriteLine(url);
-            var webReq = (HttpWebRequest) WebRequest.Create(url);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+            // var webReq = (HttpWebRequest) WebRequest.Create(url);
+            // apiClient.SendAsync()
+           
             try
             {
-                var resp = (HttpWebResponse) webReq.GetResponse();
+                HttpResponseMessage resp = await apiClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+
+            //    var resp = (HttpWebResponse) webReq.GetResponse();
                 if (resp.StatusCode == HttpStatusCode.OK)
                 {
-                    var respStr = Utils.StreamToString(resp.GetResponseStream(), Encoding.UTF8);
+                    var respStr = await resp.Content.ReadAsStringAsync(); // Utils.StreamToString(resp.GetResponseStream(), Encoding.UTF8);
                     var obj = JsonConvert.DeserializeObject(respStr) as JObject;
                     if (obj["access_token"] != null && obj["expires_in"] != null)
                         return obj;
@@ -64,7 +78,7 @@ namespace Baidu.Aip
                     return null;
                 }
                 if (throws)
-                    throw new AipException("Failed to request token. " + resp.StatusCode + resp.StatusDescription);
+                    throw new AipException("Failed to request token. " + resp.StatusCode);
             }
             catch (Exception e)
             {
@@ -102,7 +116,14 @@ namespace Baidu.Aip
             var host = uri.Host;
             if (!(uri.Scheme == "https" && uri.Port == 443) && !(uri.Scheme == "http" && uri.Port == 80))
                 host += ":" + uri.Port;
-            var canonicalHeaders = "content-type:" + Utils.UriEncode(aipHttpRequest.GeneratedRequest.ContentType, true)
+
+            string contentType = "";
+            if(aipHttpRequest.GeneratedRequest.Content is StringContent)
+            {
+                contentType = (aipHttpRequest.GeneratedRequest.Content as StringContent).Headers.ContentType.MediaType;
+            }
+           
+            var canonicalHeaders = "content-type:" + Utils.UriEncode(contentType, true)
                                    + "\nhost:" + Utils.UriEncode(host);
 //			var canonicalHeaders = "host:" + Utils.UriEncode(host);
 

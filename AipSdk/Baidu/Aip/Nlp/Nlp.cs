@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Baidu.Aip.Nlp
 {
@@ -58,10 +59,10 @@ namespace Baidu.Aip.Nlp
 //	    /// <param name="type"></param>
 //	    /// <param name="options"></param>
 //	    /// <returns></returns>
-//	    public JObject Invoke(Type type, Dictionary<string, object> options)
+//	    public async Task<JObject> Invoke(Type type, Dictionary<string, object> options)
 //	    {
 //	        CheckNotNull(options, "options");
-//	        PreAction();
+//	        await PreAction();
 //	        var req = new AipHttpRequest(type.Url)
 //	        {
 //	            Method = "POST",
@@ -72,7 +73,7 @@ namespace Baidu.Aip.Nlp
 //            {
 //                req.Bodys.Add(kv.Key, kv.Value);
 //            }
-//	        return PostAction(req);
+//	        return await PostAction(req);
 //	    }
 
 
@@ -83,15 +84,15 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="options">附加参数</param>
 	    /// <returns></returns>
 	    [Obsolete("Use Lexer instead.")]
-        public JObject WordSeg(string query, Dictionary<string, object> options = null)
+        public async Task<JObject> WordSeg(string query, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_WordSeg);
             if (options != null)
                 foreach (var kv in options)
                     req.Bodys.Add(kv.Key, kv.Value);
             req.Bodys["query"] = query;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 	    /// <summary>
@@ -100,12 +101,12 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="query">文本内容</param>
 	    /// <returns></returns>
 	    [Obsolete("Use Lexer instead.")]
-        public JObject WordPos(string query)
+        public async Task<JObject> WordPos(string query)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_WordPos);
             req.Bodys["query"] = query;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 	    /// <summary>
@@ -115,16 +116,16 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="text2">文本2</param>
 	    /// <param name="options"></param>
 	    /// <returns></returns>
-	    public JObject Simnet(string text1, string text2, Dictionary<string, object> options = null)
+	    public async Task<JObject> Simnet(string text1, string text2, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_SimNet);
             if (options != null)
                 foreach (var kv in options)
                     req.Bodys.Add(kv.Key, kv.Value);
             req.Bodys["text_1"] = text1;
             req.Bodys["text_2"] = text2;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 
@@ -134,16 +135,16 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="query">文本内容</param>
 	    /// <param name="options">附加参数</param>
 	    /// <returns></returns>
-	    public JObject WordEmbeddingVector(string query, Dictionary<string, object> options = null)
+	    public async Task<JObject> WordEmbeddingVector(string query, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_WordEmbeddingVector);
             if (options != null)
                 foreach (var kv in options)
                     req.Bodys.Add(kv.Key, kv.Value);
             req.Bodys["word"] = query;
 
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 
@@ -154,9 +155,9 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="word2">单词2</param>
 	    /// <param name="options">附加参数</param>
 	    /// <returns></returns>
-	    public JObject WordEmbeddingSimilarity(string word1, string word2, Dictionary<string, object> options = null)
+	    public async Task<JObject> WordEmbeddingSimilarity(string word1, string word2, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_WordEmbeddingSimilarity);
             if (options != null)
                 foreach (var kv in options)
@@ -164,7 +165,7 @@ namespace Baidu.Aip.Nlp
             req.Bodys["word_1"] = word1;
             req.Bodys["word_2"] = word2;
 
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 
@@ -173,12 +174,12 @@ namespace Baidu.Aip.Nlp
 	    /// </summary>
 	    /// <param name="text">文本内容</param>
 	    /// <returns></returns>
-	    public JObject DNN_LM_Cn(string text)
+	    public async Task<JObject> DNN_LM_Cn(string text)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_DNNLM);
             req.Bodys["text"] = text;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 	    /// <summary>
@@ -187,13 +188,13 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="text">文本内容</param>
 	    /// <param name="type">供12个类别,默认类别为4（餐厅）</param>
 	    /// <returns></returns>
-	    public JObject CommentTag(string text, int type)
+	    public async Task<JObject> CommentTag(string text, int type)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_CommentTag);
             req.Bodys["text"] = text;
             req.Bodys["type"] = type;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 	    /// <summary>
@@ -201,12 +202,12 @@ namespace Baidu.Aip.Nlp
 	    /// </summary>
 	    /// <param name="text">文本内容</param>
 	    /// <returns></returns>
-	    public JObject Lexer(string text)
+	    public async Task<JObject> Lexer(string text)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_Lexer);
             req.Bodys["text"] = text;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 	    /// <summary>
@@ -214,12 +215,12 @@ namespace Baidu.Aip.Nlp
 	    /// </summary>
 	    /// <param name="text">文本内容</param>
 	    /// <returns></returns>
-	    public JObject SentimentClassify(string text)
+	    public async Task<JObject> SentimentClassify(string text)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_SentimentClassify);
             req.Bodys["text"] = text;
-            return PostAction(req);
+            return await PostAction(req);
         }
 
 	    /// <summary>
@@ -228,15 +229,15 @@ namespace Baidu.Aip.Nlp
 	    /// <param name="text"></param>
 	    /// <param name="options"></param>
 	    /// <returns></returns>
-	    public JObject DepParser(string text, Dictionary<string, object> options = null)
+	    public async Task<JObject> DepParser(string text, Dictionary<string, object> options = null)
         {
-            PreAction();
+            await PreAction();
             var req = DefaultRequest(NLP_DepParsery);
             if (options != null)
                 foreach (var kv in options)
                     req.Bodys.Add(kv.Key, kv.Value);
             req.Bodys["text"] = text;
-            return PostAction(req);
+            return await PostAction(req);
         }
     }
 }
