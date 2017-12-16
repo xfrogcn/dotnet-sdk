@@ -16,7 +16,7 @@
 
 **使用NuGet管理**
 
-在NuGet中搜索 `Baidu.AI`，安装最新版即可。
+在NuGet中搜索 `dotnet.AipSdk`，安装最新版即可。
 
 地址 https://www.nuget.org/packages/dotnet.AipSdk/1.0.0-beta.7.12.15
 
