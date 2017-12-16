@@ -7,6 +7,9 @@
     <Authors>wHaibo</Authors>
     <Company>mxhy</Company>
     <Product>dotnet.AipSdk</Product>
+    <Version>1.0.0-beta.7.12.15</Version>
+    <RepositoryUrl>https://github.com/xfrogcn/dotnet-sdk</RepositoryUrl>
+    <PackageTags>BaiduAI</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
