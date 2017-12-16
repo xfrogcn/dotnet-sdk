@@ -1,6 +1,6 @@
-# 百度AI开放平台 .Net SDK
+# 百度AI开放平台 .Net Core SDK
 
-**支持平台：.Net Framework 3.5 及以上版本**
+**支持平台：.NET Core 2.0 及以上版本**
 
 **目录结构**
 
@@ -16,18 +16,13 @@
 
 **使用NuGet管理**
 
-在NuGet中搜索 `Baidu.AI`，安装最新版即可。
+在NuGet中搜索 `dotnet.AipSdk`，安装最新版即可。
 
-地址 https://www.nuget.org/packages/Baidu.AI/
+地址 https://www.nuget.org/packages/dotnet.AipSdk/1.0.0-beta.7.12.15
 
-
-**下载dll导入**
-
-1.在[官方网站](http://ai.baidu.com/sdk)下载C# SDK压缩工具包。
-
-2.解压后，将 `AipSdk.dll` 和 thirdparty 中 的dll文件添加为引用。
-
-3.如需使用demo，将 `Demo` 文件夹中相关Demo文件添加至工程即可。
+```
+Install-Package dotnet.AipSdk -Version 1.0.0-beta.7.12.15
+```
 
 
 ## 使用文档
